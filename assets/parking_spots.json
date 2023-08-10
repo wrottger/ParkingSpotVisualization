@@ -1,0 +1,14 @@
+[
+    {"x": 88, "y": 70, "occupied": 0},
+    {"x": 136, "y": 70, "occupied": 1},
+    {"x": 183, "y": 70, "occupied": 1},
+    {"x": 230, "y": 70, "occupied": 0},
+    {"x": 275, "y": 70, "occupied": 0},
+    {"x": 323, "y": 70, "occupied": 0},
+    {"x": 88, "y": 223, "occupied": 1},
+    {"x": 136, "y": 223, "occupied": 0},
+    {"x": 183, "y": 223, "occupied": 1},
+    {"x": 230, "y": 223, "occupied": 1},
+    {"x": 275, "y": 223, "occupied": 0},
+    {"x": 323, "y": 223, "occupied": 1}
+]
