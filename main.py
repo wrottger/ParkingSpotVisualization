@@ -93,7 +93,6 @@ def update_graph(n):
         margin=dict(l=30, r=0, b=0, t=0),
         width=445,
         height=400,
-
     )
     fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
 
