@@ -98,7 +98,7 @@ def update_graph(n):
 
     spots = import_parking_status()
     occupied_spots = spots.count(1)
-    historical_status.append(random() * 5)
+    historical_status.append(occupied_spots)
     trace = plotly.graph_objs.Scatter(
         x=[i for i in range(30)],
         y=list(historical_status),
