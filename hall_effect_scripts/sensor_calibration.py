@@ -28,7 +28,6 @@ def main():
     mean_values = get_mean_value(datapoints)
     with open(config.CALIBRATION_FILE, 'w') as f:
         f.write(", ".join(mean_values))
-    open(config.HISTORICAL_STATUSES, 'w').close()
 
 
 if __name__ == '__main__':
