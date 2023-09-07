@@ -1,7 +1,6 @@
-# app.py
-from random import random
-
+import dash
 import PIL.Image
+import pandas as pd
 import plotly
 from PIL import Image
 import json
@@ -11,41 +10,36 @@ import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from collections import deque
 
-
-# Init parking spot image
-parking_image = Image.open("assets/parking_spot_image.png")
-
-# Init Dash app
-app = Dash(__name__, title='Weekly Analytics', update_title=None, external_stylesheets=[dbc.themes.LUX])
-
-layout = html.Div([
-    html.H1("Freie Parkplätze",
-            style={"margin-top": "15px", "margin-left": "15px"}),
-    html.Div(children=[
-        dcc.Graph(
-            config={
-                'displayModeBar': False
-            },
-            id='free-spots',
-            style={'display': 'inline-block'}
-        ),
-        dcc.Graph(
-            config={
-                'displayModeBar': False
-            },
-            id='parking-spot-graph',
-            style={'display': 'inline-block'}
-        )],
-        style={"margin": "0px"}),
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.layout = html.Div([
+    html.H3('Parkplatz Dashboard'),
+    html.Div([
+        html.Div([
+            dcc.Graph(
+                config={
+                    'displayModeBar': False
+                },
+                id='free-spots',
+                responsive=False,
+            ),
+        ], className="six columns"),
+        html.Div([
+            dcc.Graph(
+                config={
+                    'displayModeBar': False
+                },
+                id='parking-spot-graph',
+                responsive=True,
+            ),
+        ], className="six columns"),
+    ], className="row"),
     dcc.Interval(
         id='interval-component',
         interval=1 * 500,  # in milliseconds
         n_intervals=0
     ),
-]
-)
-
-app.layout = layout
+])
 
 
 def import_parking_status():
@@ -58,12 +52,7 @@ def import_parking_status():
           Input('interval-component', 'n_intervals'))
 def update_spots(n):
     img = PIL.Image.open("assets/parking_spot_image.png")
-    fig = px.imshow(img)
-    fig.update_layout(
-        margin=dict(l=30, r=0, b=0, t=0),
-        width=445,
-        height=400
-    )
+    fig = px.imshow(img, title="<br>            Karte")
     with open("assets/parking_spots.json", "r") as f:
         coords = json.load(f)
     fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
@@ -84,27 +73,28 @@ def update_spots(n):
         ))
     return fig
 
-historical_status = deque( maxlen=30 )
+
+historical_status = deque(maxlen=500)
+
+
 @callback(Output('parking-spot-graph', 'figure'),
           Input('interval-component', 'n_intervals'))
 def update_graph(n):
-    fig = px.line()
-    fig.update_layout(
-        margin=dict(l=30, r=0, b=0, t=0),
-        width=445,
-        height=400,
-    )
-    fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
-
     spots = import_parking_status()
     occupied_spots = spots.count(1)
     historical_status.append(occupied_spots)
-    trace = plotly.graph_objs.Scatter(
-        x=[i for i in range(30)],
+    df = pd.DataFrame(dict(
         y=list(historical_status),
-        )
-    return {'data': [trace]}
+    ))
+
+    fig = px.area(df, title="<br>            Besetzte Parkplätze")
+    fig.update_xaxes(showticklabels=False, )
+    fig.update_layout(showlegend=False,
+                      yaxis_title=None,
+                      xaxis_title=None,
+                      yaxis=dict(range=[0, 16]))
+    return fig
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run_server(debug=True)
