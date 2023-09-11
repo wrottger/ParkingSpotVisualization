@@ -1,13 +1,10 @@
 import dash
 import PIL.Image
 import pandas as pd
-import plotly
-from PIL import Image
 import json
-from dash import Dash, dcc, html, Input, Output, callback
+from dash import dcc, html, Input, Output, callback
 import plotly.express as px
 import plotly.graph_objects as go
-import dash_bootstrap_components as dbc
 from collections import deque
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
