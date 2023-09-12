@@ -21,7 +21,7 @@ def append_outputs(datapoints, outputs, bufferlen):
 
 
 def get_com_ports():
-    return [comport.device for comport in list_ports.comports()]
+    return ["/dev/ttyACM0", "/dev/ttyACM1"]
 
 
 def get_line(port):
